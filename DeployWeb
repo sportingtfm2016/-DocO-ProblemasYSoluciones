@@ -1,0 +1,30 @@
+PROBLEMA: Web solo de manera local -> localhost
+
+ANTECEDENTES: Visual Studio al desplegar solo despliega en ISS Express de manera local.
+
+SOLUCIÓN:
+- Se activa la caracteristica de IIS.
+- Además se activa la de .NET !
+- Se crea un nuevo sitio.
+- Se añaden los ficheros.
+- Se cambian los permisos a IIS_IUSRS y se comparte.
+- En propiedades del proyecto se añade la ip despues de localhost.
+- Finalmente en IIS Autenticacion -> Identidad de usuario anonimo -> Identidad del grupo de aplicaciones
+
+
+OTRA INFO:
+
+1) from a command prompt with admin privileges:
+
+netsh http add urlacl url=http://[your ip address]:8181/ user=everyone
+2) In Windows Firewall with Advanced Security, create a new inbound rule for port 8181 to allow external connections
+
+3) In applicationhost.config, in the node for your project, add:
+
+<binding protocol="http" bindingInformation="*:8181:[your ip address]" />
+
+Do NOT add (as was suggested in another answer):
+
+<binding protocol="http" bindingInformation="*:8181:*" />
+
+The above wildcard binding broke my access from http://192.168.1.6:8181/
